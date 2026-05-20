@@ -9,7 +9,7 @@ def get_connection():
     try:
         conn = mysql.connector.connect(**DB_CONFIG)
 
-        if conn.is_connected():
+        if conn.is_connected(): 
             print("Database connection successful")
             return conn
         return None

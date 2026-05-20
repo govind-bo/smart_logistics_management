@@ -7,11 +7,11 @@ def load_raw_data(base_path: str) -> dict:
     '''
     dataframes = {}
     for file in os.listdir(base_path):
-        file_path = os.join(base_path, file)
-        if not os.isfile(file_path):
+        file_path = os.path.join(base_path, file)
+        if not os.path.isfile(file_path):
             continue
         if file.endswith('.csv'):
-            df = pd.reaD_CSV(file_path)
+            df = pd.read_csv(file_path)
         elif file.endswith('.json'):
             try:
                 df = pd.read_json(file_path)
