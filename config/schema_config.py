@@ -22,3 +22,12 @@ DATE_COL_MAP = {
     #'warehouses':[],
     #'costs': []
 }
+
+LOAD_ORDER = [
+    "courier_staff",
+    "routes",
+    "warehouses",
+    "shipments",
+    "costs",
+    "shipment_tracking"
+]
