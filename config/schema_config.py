@@ -13,3 +13,12 @@ FK_MAP = [
     ('shipment_tracking', 'shipment_id', 'shipments', 'shipment_id'),
     ('costs', 'shipment_id', 'shipments', 'shipment_id')
 ]
+
+DATE_COL_MAP = {
+    'shipments': ['order_date', 'delivery_date'],
+    'shipment_tracking': ['timestamp'],
+    # 'courier_staff': [],                               # No date columns in following tables
+    #'routes': [],
+    #'warehouses':[],
+    #'costs': []
+}

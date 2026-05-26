@@ -12,7 +12,7 @@ def inspect_dataframes(dataframes: dict, n_rows:int = 3, top_n:int = 10) -> None
         print(f"\nDATASET: {name}")
         print(f"\nRows: {len(df)} | Cols: {df.shape[1]}")
         print("\nColumns:", df.columns.tolist())
-        print("\nDtypes:\n", df.dtypes.to_string())
+        print("\nDtypes:\n",df.dtypes.to_string())
         print(f"\nHead({n_rows}):\n", df.head(n_rows).to_string())
         print(f"\nSample({n_rows}):\n", df.sample(min(n_rows, len(df))).to_string())
         print()
@@ -22,8 +22,8 @@ def inspect_dataframes(dataframes: dict, n_rows:int = 3, top_n:int = 10) -> None
         if miss.empty:
             print("No missing values")
         else:
-            print(f"Columns with missing values (top {top_n}):")
-            print(miss.head(top_n))
+            print(f"Columns with missing values - {miss.size if miss.size < top_n else ('top ', top_n)}")       
+            print(miss.head(top_n).to_string())
         print()
 
         dup = df.duplicated().sum()
@@ -38,4 +38,4 @@ def inspect_dataframes(dataframes: dict, n_rows:int = 3, top_n:int = 10) -> None
         df_numeric = df.select_dtypes(include = 'number')
         if not df_numeric.empty:
             print("Summary statistics of numerical columns:")
-            print(df_numeric.describe().round(3).to_string())
+            print(df_numeric.describe().round(2).to_string())
