@@ -4,6 +4,7 @@ from src.etl.inspect_data import inspect_dataframes
 from src.etl.data_validation import validate_data
 from src.etl.data_cleaning import clean_data
 from src.etl.load_to_mysql import load_data_to_mysql
+from src.database.run_sql_script import run_sql_script
 
 
 # base path store the directory where the raw files are stored
@@ -23,8 +24,7 @@ processed_data_folder_path = os.path.join('D:\\',
 
 dup_id = "c2c0ddd0"
 
-
-def main():
+def etl_pipeline():
     '''
     Runs the complete ETL pipeline:
         1. Extract raw datasets
@@ -58,9 +58,10 @@ def main():
     print('\n[LOADING] Loading cleaned datasets to MySQL...')
     load_data_to_mysql(clean_dataframes)
 
-    print('\n[SUCCESS] Pipeline completed successfully\n')
+ 
+    print('\n[SUCCESS] ETL Pipeline completed successfully\n')
 
     
 
 if __name__ == "__main__":
-    main()
+    etl_pipeline()

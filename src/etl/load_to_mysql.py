@@ -1,6 +1,6 @@
 import pandas as pd
 from sqlalchemy import text
-from src.database.connection import get_engine
+from src.database.engine import get_engine
 from config.schema_config import LOAD_ORDER
 
 
@@ -76,6 +76,7 @@ def load_data_to_mysql(dataframes: dict[str, pd.DataFrame]) -> None:
     clear_tables(engine)
 
     # load tables in dependency order
+    # load tables in dependency order
     for table in LOAD_ORDER:
         if table not in dataframes:
             print(f"[SKIP] {table} not found")
@@ -94,4 +95,4 @@ def load_data_to_mysql(dataframes: dict[str, pd.DataFrame]) -> None:
 
         print(f"[LOADED] {table}")
 
-    print("\nALL TABLES LOADED SUCCESSFULLY")
+    print("\nALL TABLES LOADED TO MySQL SUCCESSFULLY")

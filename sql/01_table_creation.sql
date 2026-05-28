@@ -1,10 +1,11 @@
-CREATE DATABASE smart_logistics;
+DROP DATABASE IF EXISTS smart_logistics;
 
-SHOW DATABASES;
+CREATE DATABASE smart_logistics;
 
 USE smart_logistics;
 
 SHOW TABLES;
+
 -- Create tables
 -- dimension tables:
 
