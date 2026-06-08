@@ -16,11 +16,11 @@ def run_sql_script(script: str) -> None:
         with open(script_path, 'r', encoding = 'utf-8') as file:
             sql_script = file.read()
         db_engine = get_engine()
-        with db_engine.begin() as connection:
+        with db_engine.begin() as conn:
             for query in sql_script.split(';'):
                 query = query.strip()
                 if query:
-                    connection.execute(text(query))
+                    conn.execute(text(query))
         print(f"Successfully executed:  {os.path.basename(script_path)}")
 
     except SQLAlchemyError as error:
@@ -31,6 +31,7 @@ if __name__ == '__main__':
 
     script = '02_indexes.sql'
     script = '03_route_normalization.sql'
+    script = ''
 
     run_sql_script(script)
 
