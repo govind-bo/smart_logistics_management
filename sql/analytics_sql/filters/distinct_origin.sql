@@ -1,10 +1,4 @@
-
-SELECT DISTINCT s.origin
+SELECT DISTINCT s.origin 
 FROM shipments s
-WHERE s.order_date BETWEEN :start_date AND :end_date
-
-/*
-SELECT DISTINCT origin
-FROM shipments
-ORDER BY origin;
-*/
+LEFT JOIN courier_staff cs ON s.courier_id = cs.courier_id
+WHERE 1=1

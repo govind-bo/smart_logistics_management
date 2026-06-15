@@ -1,148 +1,71 @@
-
 import streamlit as st
 import pandas as pd
 from src.dashboard.utils import get_data
 
 def render_filters() -> dict:
-    """
-    Render dashboard filters and return the selected values.
-    """
-    # 1. Initialize the dictionary
-    filters = {
-        "start_date": None,
-        "end_date": None,
-        "origin": [],
-        "destination": [],
-        "shipment_status": [],
-        "courier": []
-    }
-
     st.sidebar.header("Global Filters")
 
-    # 2. DATE FILTER (This MUST happen first so the other filters have a date boundary!)
-   
-    date_bounds_df = get_data('filters', 'date_range_bounds.sql') 
-    min_date = pd.to_datetime(date_bounds_df['min_date'].iloc[0]).date()
-    max_date = pd.to_datetime(date_bounds_df['max_date'].iloc[0]).date()
+    # 1. Handle Dates safely
+    try:
+        bounds_df = get_data('filters', 'date_range_bounds.sql')
+        min_date = pd.to_datetime(bounds_df['min_date'].iloc[0]).date()
+        max_date = pd.to_datetime(bounds_df['max_date'].iloc[0]).date()
+    except Exception:
+        min_date = pd.to_datetime('2020-01-01').date()
+        max_date = pd.to_datetime('today').date()
 
-    selected_dates = st.sidebar.date_input(
-        "Select Date Range",
-        value=(min_date, max_date),
-        min_value=min_date,
-        max_value=max_date
-    )
-    
-    # Safely unpack dates
-    if isinstance(selected_dates, tuple) and len(selected_dates) == 2:
-        filters["start_date"] = selected_dates[0]
-        filters["end_date"] = selected_dates[1]
-    else:
-        filters["start_date"] = min_date
-        filters["end_date"] = max_date
+    date_range = st.sidebar.date_input("Date Range", value=(min_date, max_date))
+    start_date = date_range[0] if date_range else min_date
+    end_date = date_range[1] if len(date_range) == 2 else start_date
 
-    # 3. CASCADING FILTERS
-    # Now that start_date and end_date are in the 'filters' dict, we pass it down!
+    # 2. Extract current UI state directly
+    curr_origin = st.session_state.get('origin_picker', [])
+    curr_dest = st.session_state.get('dest_picker', [])
+    curr_status = st.session_state.get('status_picker', [])
+    curr_courier = st.session_state.get('courier_picker', [])
 
-    # -- Origin Filter --
-    origin_df = get_data('filters', 'distinct_origin.sql', params=filters)
-    # Sort in python using .sort() for clean UI
-    origins = origin_df['origin'].dropna().tolist()
-    origins.sort()
-    filters["origin"] = st.sidebar.multiselect("Origin City", options=origins)
+    # 3. Helper to get valid options for multidirectional filtering
+    def get_valid_options(sql_file: str, exclude_key: str):
+        # Pass all current selections EXCEPT the widget we are generating options for
+        params = {
+            "start_date": start_date, "end_date": end_date,
+            "origin": curr_origin if exclude_key != 'origin' else [],
+            "destination": curr_dest if exclude_key != 'destination' else [],
+            "shipment_status": curr_status if exclude_key != 'shipment_status' else [],
+            "courier": curr_courier if exclude_key != 'courier' else []
+        }
+        df = get_data('filters', sql_file, params=params)
+        
+        # ISSUE 2 FIXED: .unique() prevents duplicates, sorted() alphabetizes them (A-Z)
+        return sorted(df.iloc[:, 0].dropna().unique().tolist()) if not df.empty else []
 
-    # -- Destination Filter --
-    dest_df = get_data('filters', 'distinct_destination.sql', params=filters)
-    destinations = dest_df['destination'].dropna().tolist()
-    destinations.sort()
-    filters["destination"] = st.sidebar.multiselect("Destination City", options=destinations)
+    # Fetch fresh valid options based on cross-filters
+    valid_origins = get_valid_options('distinct_origin.sql', 'origin')
+    valid_dests = get_valid_options('distinct_destination.sql', 'destination')
+    valid_statuses = get_valid_options('distinct_shipment_status.sql', 'shipment_status')
+    valid_couriers = get_valid_options('distinct_courier.sql', 'courier')
 
-    # -- Shipment Status Filter (Where your error was!) --
-    status_df = get_data('filters', 'distinct_shipment_status.sql', params=filters)
-    statuses = status_df['shipment_status'].dropna().tolist()
-    statuses.sort()
-    filters["shipment_status"] = st.sidebar.multiselect("Shipment Status", options=statuses)
+    # 4. ISSUE 3 FIXED: Safely clean up session state BEFORE rendering to prevent Streamlit crashes
+    if 'origin_picker' in st.session_state:
+        st.session_state['origin_picker'] = [x for x in curr_origin if x in valid_origins]
+    if 'dest_picker' in st.session_state:
+        st.session_state['dest_picker'] = [x for x in curr_dest if x in valid_dests]
+    if 'status_picker' in st.session_state:
+        st.session_state['status_picker'] = [x for x in curr_status if x in valid_statuses]
+    if 'courier_picker' in st.session_state:
+        st.session_state['courier_picker'] = [x for x in curr_courier if x in valid_couriers]
 
-    # -- Courier Filter --
-    courier_df = get_data('filters', 'distinct_courier.sql', params=filters)
-    couriers = courier_df['courier_name'].dropna().tolist()
-    couriers.sort()
-    filters["courier"] = st.sidebar.multiselect("Courier Name", options=couriers)
+    # 5. Render Filters
+    selected_origin = st.sidebar.multiselect('Origin City', options=valid_origins, key='origin_picker')
+    selected_dest = st.sidebar.multiselect('Destination City', options=valid_dests, key='dest_picker')
+    selected_status = st.sidebar.multiselect('Shipment Status', options=valid_statuses, key='status_picker')
+    selected_courier = st.sidebar.multiselect('Courier Name', options=valid_couriers, key='courier_picker')
 
-    return filters
-
-
-'''
-import streamlit as st
-from src.dashboard.utils import get_data
-
-def render_filters() -> dict:
-    """
-    Render dashboard filters and return the selected values.
-    """
-    filters = {
-        "start_date": None,
-        "end_date": None,
-        "origin": [],
-        "destination": [],
-        "shipment_status": [],
-        "courier": []
-    }
-
-    st.sidebar.header("Filters")
-
-    # Order Date Range Bounds
-    date_bounds_df = get_data('filters', 'date_range_bounds.sql')
-    min_date = date_bounds_df.loc[0, 'min_date']
-    max_date = date_bounds_df.loc[0, 'max_date']
-
-    selected_dates = st.sidebar.date_input(
-        'Order Date range',
-        value=(min_date, max_date),
-        min_value=min_date,
-        max_value=max_date
-    )
-    if isinstance(selected_dates, tuple) and len(selected_dates) == 2:
-        filters['start_date'] = selected_dates[0]
-        filters['end_date'] = selected_dates[1]
-    else:
-        filters["start_date"] = selected_dates
-        filters["end_date"] = selected_dates
-
-    # Shipment Status Filter
-    status_df = get_data('filters', 'distinct_shipment_status.sql', params=filters)
-    filters['shipment_status'] = st.sidebar.multiselect(
-        'Shipment status',
-        options=status_df['shipment_status'].tolist()
-    )
-
-    # Origin Filter
-    origin_df = get_data('filters', 'distinct_origin.sql')
-    filters['origin'] = st.sidebar.multiselect(
-        'Origin',
-        options=origin_df['origin'].tolist()
-    )
-
-    # Destination Filter
-    destination_df = get_data('filters', 'distinct_destination.sql')
-    filters['destination'] = st.sidebar.multiselect(
-        'Destination',
-        options=destination_df['distinct_destination'].tolist() if 'distinct_destination' in destination_df.columns else destination_df.iloc[:,0].tolist()
-    )
-
-    # Courier Filter
-    courier_df = get_data('filters', 'distinct_courier.sql')
-    filters['courier'] = st.sidebar.multiselect(
-        'Courier name',
-        options=courier_df['name'].tolist()
-    )
-     
     return {
-        "start_date": filters["start_date"],
-        "end_date": filters["end_date"],
-        "origin": filters["origin"],
-        "destination": filters["destination"],
-        "shipment_status": filters["shipment_status"],
-        "courier": filters["courier"]
+        "start_date": start_date,
+        "end_date": end_date,
+        "origin": selected_origin,
+        "destination": selected_dest,
+        "shipment_status": selected_status,
+        "courier": selected_courier
     }
-
-'''

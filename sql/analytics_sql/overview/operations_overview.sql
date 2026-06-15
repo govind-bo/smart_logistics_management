@@ -1,4 +1,4 @@
-SELECT 
+SELECT
     s.shipment_id,
     s.order_date,
     s.delivery_date,
@@ -23,4 +23,4 @@ LEFT JOIN courier_staff cs ON s.courier_id = cs.courier_id
 LEFT JOIN routes r ON s.route_id = r.route_id
 LEFT JOIN costs c ON s.shipment_id = c.shipment_id
 LEFT JOIN warehouses w ON s.origin = w.city
-WHERE s.order_date BETWEEN :start_date AND :end_date
+WHERE 1=1

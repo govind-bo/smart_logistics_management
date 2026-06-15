@@ -4,4 +4,5 @@
 SELECT
     MIN(order_date) AS min_date,
     MAX(order_date) AS max_date
-FROM shipments;
+FROM shipments
+WHERE 1 = 1
