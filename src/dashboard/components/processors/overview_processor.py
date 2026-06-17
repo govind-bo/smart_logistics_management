@@ -18,7 +18,7 @@ def calculate_overview_metrics(df: pd.DataFrame) -> dict:
     
     # Status percentages
     status_counts = df['status'].value_counts()
-    total = len(df)
+    total = len(df)                     # USE total = metrics["total_shipments"] - TO IMPROVE SPEED ?
     metrics["delivered_pct"] = (status_counts.get('Delivered', 0) / total * 100)
     metrics["in_transit_pct"] = (status_counts.get('In Transit', 0) / total * 100)
     metrics["cancelled_pct"] = (status_counts.get('Cancelled', 0) / total * 100)

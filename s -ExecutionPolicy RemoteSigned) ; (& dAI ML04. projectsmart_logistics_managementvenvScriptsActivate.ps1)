@@ -1,0 +1,59 @@
+[33mcommit b16ee00c26ec655e5e253fefc6a3d73f71bb7e17[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Govind S <bora.govindsingh12@gmail.com>
+Date:   Mon Jun 15 12:38:50 2026 +0530
+
+    Added cascading filters to streamlit page
+
+[33mcommit c873206bad6d54feec36b4fc6106728c78119db4[m
+Author: Govind S <bora.govindsingh12@gmail.com>
+Date:   Fri Jun 12 16:03:42 2026 +0530
+
+    Added cascading filters to app
+
+[33mcommit 9b22dfab806b2af93265c1ca6ec31a19d364193a[m
+Author: Govind S <bora.govindsingh12@gmail.com>
+Date:   Mon Jun 8 12:05:46 2026 +0530
+
+    added streamlit dashboard page 1
+
+[33mcommit 2d651f5d702fb66cb667874585bbaade206a17f8[m
+Author: Govind S <bora.govindsingh12@gmail.com>
+Date:   Thu May 28 05:48:59 2026 +0530
+
+    Added main pipeline, and executive_kpis
+
+[33mcommit 0e116b0985a88cc042e90381f04e11ef38428a27[m
+Author: Govind S <bora.govindsingh12@gmail.com>
+Date:   Tue May 26 22:02:05 2026 +0530
+
+    Added data loading to MySQL script, finished ETL pipeline
+
+[33mcommit 0100e3c4038b4be37d652775d08b69a9fd40d576[m
+Author: Govind S <bora.govindsingh12@gmail.com>
+Date:   Tue May 26 14:40:24 2026 +0530
+
+    Added data_cleaning script (clean, save and reinspect data)
+
+[33mcommit 092e982e22c5bb17952c09a041d8cdad5174ad8e[m
+Author: Govind S <bora.govindsingh12@gmail.com>
+Date:   Fri May 22 03:39:35 2026 +0530
+
+    added data validation script and test script
+
+[33mcommit 697efa9fc3b84f38ec78e9bf9b974a10dcec83e9[m
+Author: Govind S <bora.govindsingh12@gmail.com>
+Date:   Wed May 20 18:00:10 2026 +0530
+
+    Added data inspection script
+
+[33mcommit 184ed455e2b05be318c70530b7b922d3247e19b9[m
+Author: Govind S <bora.govindsingh12@gmail.com>
+Date:   Wed May 20 15:31:50 2026 +0530
+
+    Added data extraction script
+
+[33mcommit 2c2909d0ae8eeb1e72914ea97eaf187da0e4de7d[m
+Author: Govind S <bora.govindsingh12@gmail.com>
+Date:   Tue May 19 21:07:23 2026 +0530
+
+    initial project setup

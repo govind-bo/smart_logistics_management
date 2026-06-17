@@ -16,7 +16,7 @@ def fetch_filtered_data(folder: str, sql_file: str, params: dict | None = None) 
     params = params or {}
     query_params = {}               
     
-    # 1. Apply Dates automatically if present
+    # 1. Apply Dates if present
     if params.get('start_date') and params.get('end_date'):
         # Only append date filter if the SQL query doesn't already have it written inside
         if ":start_date" not in query_string:
@@ -24,8 +24,7 @@ def fetch_filtered_data(folder: str, sql_file: str, params: dict | None = None) 
         query_params['start_date'] = params['start_date']
         query_params['end_date'] = params['end_date']
 
-    # 2. ISSUE 1 FIXED: Explicit Mapping. 
-    # Notice 'shipment_status' directly points to the exact database column 's.status'
+    # 2. Explicit Mapping with db columns - to maintain Abstraction (separation of concerns), cleanliness and SECURITY ????HOW???????
     filter_map = {
         'origin': 's.origin',
         'destination': 's.destination',

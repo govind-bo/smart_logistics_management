@@ -1,5 +1,4 @@
 
-
 from pathlib import Path
 import sys
 
@@ -18,12 +17,13 @@ st.title("Smart Logistics Management & Analytics Platform")
 
 # render sidebar filter dropdown selectors -------------------------------------
 filters = render_filters()
-
+                 # DELETE THIS PART ___________________________________________________________
 # apply automatic fallback dates if the user leaves them blank -----------------
 if not filters.get("start_date"):
     filters["start_date"] = "2020-01-01"
 if not filters.get("end_date"):
     filters["end_date"] = "2026-12-31"
+
 
 # download row level records from our database once ----------------------------
 df = get_data("overview", "operations_overview.sql", params=filters)
