@@ -21,7 +21,13 @@ def create_bar_chart(df: pd.DataFrame, x: str, y: str,
         return fig
     
     fig = px.bar(df, x=x, y=y, text=text, orientation=orientation)
-    fig.update_layout(title=title, height=height, margin=dict(l=l_margin, r=r_margin, t=t_margin, b=b_margin))
+    fig.update_layout(
+        title=title,
+        xaxis_title = xaxis_title,
+        yaxis_title = yaxis_title,
+        height=height, 
+        margin=dict(l=l_margin, r=r_margin, t=t_margin, b=b_margin),
+        )
     return fig
 
 # LINE CHART -------------------------------------------------------
@@ -41,5 +47,10 @@ def create_line_chart(df: pd.DataFrame, x: str, y: str,
     
     
     fig = px.line(df, x=x, y=y, markers=True, text=text)
-    fig.update_layout(title=title, height=height, margin=dict(l=l_margin, r=r_margin, t=t_margin, b=b_margin))
+    fig.update_layout(
+        title=title,
+        xaxis_title = xaxis_title,
+        yaxis_title = yaxis_title,
+        height=height, 
+        margin=dict(l=l_margin, r=r_margin, t=t_margin, b=b_margin))
     return fig

@@ -29,13 +29,18 @@ def fetch_filtered_data(folder: str, sql_file: str, params: dict | None = None) 
         'origin': 's.origin',
         'destination': 's.destination',
         'shipment_status': 's.status',
-        'courier': 'cs.name'
+        'courier': 'cs.name',
+        'shipment_id': 's.shipment_id'
     }
 
     # 3. Build the IN clauses dynamically
     for dict_key, db_column in filter_map.items():
         selected_values = params.get(dict_key, [])
         if selected_values: 
+            # check for shipment_id and convert to list
+            if isinstance(selected_values, str):
+                selected_values = [selected_values]
+
             placeholders = []
             for i, val in enumerate(selected_values):
                 param_name = f"{dict_key}_{i}"
