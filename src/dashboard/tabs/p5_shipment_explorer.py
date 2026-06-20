@@ -31,7 +31,7 @@ def render_shipment_search_page() ->None:
         else:
             shipment_details = get_shipment_details(df)
             shipment_tracking_details = get_shipment_tracking_details(df)
-            shipment_cost_details = get_shipment_cost_details(df)
+            #shipment_cost_details = get_shipment_cost_details(df)
 
             # display shipment data
             row1 = st.columns([2,3])

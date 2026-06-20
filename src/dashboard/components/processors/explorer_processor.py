@@ -2,24 +2,40 @@ import pandas as pd
 
 def get_shipment_details(df: pd.DataFrame) -> dict:
     shipment_details = {
-        'Shipment ID': df.get('shipment_id', '-')[0],
-        'Status' : df.get('status', '-')[0],
-        'Order Date': df.get('order_date', '-')[0],
-        'Delivery Date': df.get('delivery_date', '-')[0],
-        'Origin': df.get('origin', '-')[0],
-        'Destination': df.get('destination', '-')[0], 
-        'Weight': f'{df.get('weight', '-')[0]} kgs',
-        'Vehicle Type': df.get('vehicle_type', '-')[0],
-        'Courier': f"{df.get('courier_name','-')[0]} ({df.get('courier_id','-')[0]})" \
-                                        if df.get('courier_name','-')[0] != '-' else '-',
-        'Fuel Cost': df.get('fuel_cost', '-')[0],
-        'Labor Cost': df.get('labor_cost', '-')[0],
-        'Miscellaneous Cost': df.get('misc_cost', '-')[0]
-               
-            }
-    #shipment_details['Courier'] = f"{df.get('courier_name','-')[0]} ({df.get('courier_id','-')[0]})" \
-     #                                   if df.get('courier_name','-')[0] != '-' else '-' 
+        'Shipment ID': '-',
+        'Status' : '-',
+        'Order Date': '-',
+        'Delivery Date': '-',
+        'Origin': '-',
+        'Destination': '-', 
+        'Weight': '-',
+        'Vehicle Type': '-',
+        'Courier': '-',
+        'Fuel Cost': '-',
+        'Labor Cost': '-',
+        'Miscellaneous Cost': '-'
+    }
+    if df.empty:
+        return shipment_details
+    
+    record = df.iloc[0]
 
+    shipment_details['Shipment ID'] = record.get('shipment_id', '-')
+    shipment_details['Status'] = record.get('status', '-')
+    shipment_details['Order Date'] = record.get('order_date', '-')
+    shipment_details['Delivery Date'] = record.get('delivery_date', '-')
+    shipment_details['Origin'] = record.get('origin', '-')
+    shipment_details['Destination'] = record.get('destination', '-')
+    shipment_details['Weight'] = f"{record.get('weight', '-')} kgs"
+    shipment_details['Vehicle Type'] = record.get('vehicle_type', '-')
+    
+    shipment_details['Fuel Cost'] = record.get('fuel_cost', 0.0)
+    shipment_details['Labor Cost'] = record.get('labor_cost', 0.0)
+    shipment_details['Miscellaneous Cost'] = record.get('misc_cost', 0.0)
+
+    if pd.notna(record.get('courier_name')):
+        shipment_details['Courier'] = f"{record.get('courier_name')} ({record.get('courier_id', '-')})"
+    
     return shipment_details
 
 def get_shipment_tracking_details(df: pd.DataFrame ) -> pd.DataFrame:

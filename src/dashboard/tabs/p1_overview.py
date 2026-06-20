@@ -15,7 +15,7 @@ def render_overview_page() -> None:
     # render sidebar filter dropdown selectors -------------------------------------
     filters = render_filters()
 
-    # download row level records from our database once ----------------------------
+    # download row level records from the database once ----------------------------
     df = get_data("tabs", "operations_overview.sql", params=filters)
 
     if df.empty:
