@@ -43,7 +43,7 @@ def calculate_cost_metrics(df: pd.DataFrame) -> dict:
     return cost_metrics
 # endregion
 
-# region Datasets for Charts
+# region Cost Datasets
 def prepare_cost_datasets(df: pd.DataFrame, sort_by: str = 'total_cost', is_ascending: bool = False, display_limit: int = 15) -> dict:
     """
     Prepares dataset dictionaries for the Cost Analytics charts.

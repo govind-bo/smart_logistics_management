@@ -15,7 +15,7 @@ def _clear_processed_data_folder(processed_data_folder_path: str) -> None:
             os.remove(path)
 
 
-def _data_cleaner(dataframes: dict, dup_id: str ) -> dict:
+def _data_cleaner(dataframes: dict, dup_id: str|None = None ) -> dict:
     '''
     This function cleans the duplicate ids from the dataframe passed into it
     for the known duplicate id it will keep the delievered row and remove the cancelled row
@@ -34,7 +34,7 @@ def _data_cleaner(dataframes: dict, dup_id: str ) -> dict:
             s_tracking_df['timestamp'] = pd.to_datetime(s_tracking_df['timestamp'])
             s_tracking_df = s_tracking_df[~(
                                 (s_tracking_df['shipment_id'] == dup_id) &
-                                (s_tracking_df['timestamp'].dt.year == 2026)                # best way to make it dynamic ?????????????????????
+                                (s_tracking_df['timestamp'].dt.year == 2026)                
             )]
             clean_dataframes[df_name] = s_tracking_df
         elif df_name =='costs':
@@ -45,6 +45,23 @@ def _data_cleaner(dataframes: dict, dup_id: str ) -> dict:
             clean_dataframes[df_name] = cost_df
         else:
             clean_dataframes[df_name] = dataframes[df_name]
+
+    # add route ID to shipments DF
+    if 'shipments' in clean_dataframes and 'routes' in clean_dataframes:
+        shipments_df = clean_dataframes['shipments']
+        routes_df = clean_dataframes['routes']
+        
+        # Resolve 1-to-Many routes by prioritizing the shortest distance route
+        optimal_routes = routes_df.sort_values(by=['origin', 'destination', 'distance_km'], ascending=[True, True, True])
+        # Deduplicate routes to prevent 'Left Join Explosion' if multiple routes exist between same cities
+        unique_routes = optimal_routes.drop_duplicates(subset=['origin', 'destination'], keep='first')
+        
+        shipments_df = shipments_df.merge(
+            unique_routes[['origin', 'destination', 'route_id']], 
+            on=['origin', 'destination'], 
+            how='left'
+        )
+        clean_dataframes['shipments'] = shipments_df
 
     return clean_dataframes
 

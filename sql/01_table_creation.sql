@@ -42,10 +42,15 @@ CREATE TABLE IF  NOT EXISTS shipments(
         courier_id VARCHAR(50) COMMENT 'courier responsible for delivery (FK to courier_staff)',
         status VARCHAR(50) COMMENT 'Current shipment status (Delivered, In Transit, Cancelled, etc.)',
         delivery_date DATE NULL COMMENT 'Date when shipment was delivered (NULL if not delivered yet)',
+        route_id VARCHAR(50) COMMENT 'Mapped route identifier',
         
         CONSTRAINT fk_shipments_courier
 			FOREIGN KEY (courier_id)
-			REFERENCES courier_staff(courier_id)
+			REFERENCES courier_staff(courier_id),
+
+        CONSTRAINT fk_shipments_route
+            FOREIGN KEY (route_id)
+            REFERENCES routes(route_id)
         ) COMMENT'Stores all shipment/order details';
        
 CREATE TABLE IF NOT EXISTS shipment_tracking (
@@ -70,5 +75,4 @@ CREATE TABLE IF NOT EXISTS costs (
 			REFERENCES shipments(shipment_id)
 		) COMMENT = 'Stores cost breakdown per shipment';
 
-SHOW TABLES;
 

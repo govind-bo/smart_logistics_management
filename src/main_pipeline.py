@@ -3,8 +3,7 @@ from src.etl.etl_pipeline import etl_pipeline
 
 
 POST_LOAD_SCRIPTS = [
-    '02_indexes.sql',
-    '03_route_normalization.sql'
+    '02_indexes.sql'
 ]
 
 def main() -> None:

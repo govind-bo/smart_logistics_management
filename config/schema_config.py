@@ -11,7 +11,8 @@ PK_MAP = {
 FK_MAP = [
     ('shipments', 'courier_id', 'courier_staff', 'courier_id'),
     ('shipment_tracking', 'shipment_id', 'shipments', 'shipment_id'),
-    ('costs', 'shipment_id', 'shipments', 'shipment_id')
+    ('costs', 'shipment_id', 'shipments', 'shipment_id'),
+    ('shipments', 'route_id', 'routes', 'route_id')
 ]
 
 DATE_COL_MAP = {
